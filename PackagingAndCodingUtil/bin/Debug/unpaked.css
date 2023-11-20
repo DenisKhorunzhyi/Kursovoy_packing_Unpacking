@@ -1,0 +1,135 @@
+@charset "utf-8" \r \r \r;
+* {
+  margin :  0;
+  outline :  none;
+}
+p {
+  line-height :  1.5;
+  text-align :  justify;
+  margin :  4px;
+}
+html {
+  height :  100%;
+}
+body {
+  width :  100%;
+  height :  100%;
+  background-color :  #000;
+  color :  #333;
+  font-family :  "Segoe UI", Arial, sans-serif;
+  font-size :  1em;
+}
+@charset "utf-8";
+@charset "utf-8";
+@charset "utf-8";
+@charset "utf-8";
+a {
+  text-decoration :  none;
+  color :  white;
+}
+img {
+  max-width :  100%;
+  height :  auto;
+  width :  auto\9;
+}
+@charset "utf-8";
+@charset "utf-8";
+.clear {
+  clear :  both;
+}
+header {
+  width :  98%;
+  padding :  1%;
+  background-color :  #262626;
+  border-bottom :  2px solid silver;
+  margin-bottom :  10px;
+}
+header #logo {
+  width :  20%;
+  float :  left;
+}
+header #logo-img {
+  width :  100px;
+  height :  60px;
+}
+header #site-name {
+  width :  60%;
+  float :  left;
+  text-align :  center;
+  color :  white;
+  font-weight :  bold;
+  font-size :  1.5em;
+}
+header #authorization {
+  height :  60px;
+  width :  20%;
+  text-align :  right;
+  color :  white;
+  font-weight :  bold;
+  vertical-align : middle;
+  display : table-cell;
+}
+footer {
+  width :  98%;
+  padding :  1%;
+  float :  right;
+  background-color :  #262626;
+  border-top :  2px solid silver;
+  color :  white;
+}
+footer #social {
+  float :  left;
+  width :  50%;
+}
+footer #rights {
+  float :  left;
+  width :  50%;
+  text-align :  right;
+  font-size :  1.1em;
+}
+footer #social img {
+  width :  40px;
+  height :  40px;
+  float :  left;
+  margin-right :  10px;
+}
+#wrapper {
+  min-height :  100%;
+  display :  flex;
+  flex-direction :  column;
+  color :  white;
+  width :  100%;
+  float :  left;
+}
+#wrapper #left-blocks {
+  width :  30%;
+  float :  left;
+}
+#wrapper #left-block {
+  width :  100%;
+  float :  left;
+  background-color :  #262626;
+  margin-bottom :  20px;
+}
+#wrapper #left-block .banner {
+  width :  100%;
+  float :  left;
+  margin-bottom :  15px;
+  border :  2px solid silver;
+  box-sizing :  border-box;
+  background-size :  cover;
+}
+#wrapper #content-block-part {
+  width :  68%;
+  margin-left :  2%;
+  float :  left;
+}
+#wrapper #content-block-full {
+  width :  97%;
+  margin-left :  3%;
+  float :  left;
+}
+main {
+  padding :  20px;
+  flex :  1 0 auto;
+}
