@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace ProgramLib.Packaging.Css {
-    public class Css : BaseTypeFile, IPackaging {
-        public void Packaging(string path) {
-            string newName = Path.Combine(Path.GetDirectoryName(path), "~" + Path.GetFileName(path));
-            Packaging(path, newName);
-            File.Copy(newName, path, true);
-            File.Delete(newName);
-        }
-
-        public void Packaging(string pathSource, string pathDestination) {
+    public class Css : BaseTypeFile, IPackagingText {
+        /// <summary>
+        /// Реалізація методу упакування
+        /// </summary>
+        /// <param name="pathSource">посилання на файл джерела</param>
+        /// <param name="pathDestination">посилання на файл результату</param>
+        public override void Packaging(string pathSource, string pathDestination) {
             File.WriteAllText(pathDestination, "");
             using (StreamReader reader = new StreamReader(pathSource)) {
                 long fileSize = new FileInfo(pathSource).Length;//Bytes
                 int counter = 1;
-                string remainder = "";
-                while (!reader.EndOfStream) {
+                string remainder = "   ";
+                while (!reader.EndOfStream && remainder.Length > 0) {
                     char[] buffer = (fileSize > (counter * blockSize)) ? new char[blockSize]
                                                                        : new char[((counter - 1) == 0) ? fileSize
                                                                                                         : fileSize - ((counter - 1) * blockSize)];
@@ -29,21 +28,28 @@ namespace ProgramLib.Packaging.Css {
                 }
             }
         }
-
-        public void Unpackaging(string path) {
-            string newName = Path.Combine(Path.GetDirectoryName(path), "~" + Path.GetFileName(path));
-            Unpackaging(path, newName);
-            File.Copy(newName, path, true);
-            File.Delete(newName);
+        /// <summary>
+        /// Виконання упакування тексту
+        /// </summary>
+        /// <param name="data">текст для роботи</param>
+        /// <returns>результат упакування</returns>
+        public string PackagingText(string data) {
+            string result = SplitText(data);
+            return DeleteComments(ref result);
         }
-
-        public void Unpackaging(string pathSource, string pathDestination) {
+        
+        /// <summary>
+        /// Реалізація методу розпакування
+        /// </summary>
+        /// <param name="pathSource">посилання на файл джерела</param>
+        /// <param name="pathDestination">посилання на файл результату</param>
+        public override void Unpackaging(string pathSource, string pathDestination) {
             File.WriteAllText(pathDestination, "");
             using (StreamReader reader = new StreamReader(pathSource)) {
                 long fileSize = new FileInfo(pathSource).Length;//Bytes
                 int counter = 1;
-                string remainder = "";
-                while (!reader.EndOfStream) {
+                string remainder = "   ";
+                while (!reader.EndOfStream && remainder.Length > 0) {
                     char[] buffer = (fileSize > (counter * blockSize)) ? new char[blockSize]
                                                                        : new char[((counter - 1) == 0) ? fileSize
                                                                                                         : fileSize - ((counter - 1) * blockSize)];
@@ -55,7 +61,27 @@ namespace ProgramLib.Packaging.Css {
                 }
             }
         }
-
+        /// <summary>
+        /// Виконання розпакування тексту
+        /// </summary>
+        /// <param name="data">текст для роботи</param>
+        /// <param name="deepLevel">рівень поглиблення, необхідний для виявлення кількості символів табуляцій, перед строчкою</param>
+        /// <returns>результат розпакування</returns>
+        public string UnpackagingText(string data, int deepLevel) {
+            string result = "";
+            string unpackaged = Unpack(ref data);
+            var array = unpackaged.Split('\n');
+            foreach (var node in array) {
+                result += new StringBuilder().Append('\t', deepLevel) + node + "\n";
+            }
+            return result;
+        }
+        
+        /// <summary>
+        /// Розпакування
+        /// </summary>
+        /// <param name="data">текст для роботи</param>
+        /// <returns>розпакований текст</returns>
         private string Unpack(ref string data) {
             List<BaseCssNode> cssNodes = new List<BaseCssNode>();
             do {
@@ -71,8 +97,7 @@ namespace ProgramLib.Packaging.Css {
                         return CreateCssText(cssNodes);
                     }
                     cssNodes.Add(cssRule);
-                }
-                else if ((indexOpenComment < indexSemicolon || indexSemicolon == -1) && indexOpenComment != -1){//обработка комментария
+                } else if ((indexOpenComment < indexSemicolon || indexSemicolon == -1) && indexOpenComment != -1){//обработка комментария
                     int indexCloseComment = data.IndexOf("*/");
                     if (indexCloseComment == -1) return CreateCssText(cssNodes);
 
@@ -127,51 +152,49 @@ namespace ProgramLib.Packaging.Css {
             }
             return null;
         }
+        /// <summary>
+        /// Створення об'єкту стилю Css з починаючи з вказаного індексу
+        /// </summary>
+        /// <param name="indexStart">початковий індекс для виявлення стилю</param>
+        /// <param name="text">текст для роботи</param>
+        /// <returns>об'єкт стилю Css</returns>
         private CssRule MakeCssRule(int indexStart, ref string text) {
-            //indexStart = indexStart - 1;
             var cssRule = new CssRule(text.Substring(0, indexStart).Trim());
-            //text = text.Remove(0, indexStart + 1);
             bool isCommentFirstLevel = false;
             int indexFinish = -1;
             int indexStartProperty = indexStart + 1;
             for(int i = indexStart + 1; i < text.Length; i++){//поиск названия свойстра
-                if((i + 1) < text.Length) {
-                    string para = text[i] + "" + text[i + 1];
-                    if (para.Equals("/*")) {
-                        isCommentFirstLevel = true;
-                    }
-                    else if (para.Equals("*/")) {
-                        isCommentFirstLevel = false;
-                    }
-                    else if (text[i].Equals('}') && !isCommentFirstLevel) {
-                        indexFinish = i;
-                        break;
-                    }
-                    else if (text[i].Equals(':') && !isCommentFirstLevel) {
-                        string property = text.Substring(indexStartProperty, i - indexStartProperty).Trim();
-                        string value = "";
-                        bool isCommentSecondLevel = false;
-                        for (int j = i + 1; j < text.Length; j++){//поиск значения свойства
-                            if ((j + 1) < text.Length) {
-                                string para2 = text[j] + "" + text[j + 1];
-                                if (para2.Equals("/*")) {
-                                    isCommentSecondLevel = true;
-                                }
-                                else if (para2.Equals("*/")) {
-                                    isCommentSecondLevel = false;
-                                }
-                                else if (text[j].Equals(';') && !isCommentSecondLevel) {
-                                    value = text.Substring(i + 1, j - i - 1);
-                                    indexStartProperty = j + 1;
-                                    i = j;
-                                    cssRule.DeclarationBlocks.Add(new CssRule.DeclarationBlock(property, value));
-                                    break;
-                                }
+                if (text[i].Equals('}') && !isCommentFirstLevel) {
+                    indexFinish = i;
+                    break;
+                } else if (text[i].Equals(':') && !isCommentFirstLevel) {
+                    string property = text.Substring(indexStartProperty, i - indexStartProperty).Trim();
+                    string value = "";
+                    bool isCommentSecondLevel = false;
+                    for (int j = i + 1; j < text.Length; j++) {//поиск значения свойства
+                        if ((j + 1) < text.Length) {
+                            string para2 = text[j] + "" + text[j + 1];
+                            if (para2.Equals("/*")) {
+                                isCommentSecondLevel = true;
+                            } else if (para2.Equals("*/")) {
+                                isCommentSecondLevel = false;
+                            } else if (text[j].Equals(';') && !isCommentSecondLevel) {
+                                value = text.Substring(i + 1, j - i - 1);
+                                indexStartProperty = j + 1;
+                                i = j;
+                                cssRule.DeclarationBlocks.Add(new CssRule.DeclarationBlock(property, value));
+                                break;
                             }
                         }
                     }
-                }
-                else{//если мы попадаем сюда то это значит был обрыв блока, и стиль заканчивается в следующем блоке
+                } else if ((i + 1) < text.Length) {
+                    string para = text[i] + "" + text[i + 1];
+                    if (para.Equals("/*")) {
+                        isCommentFirstLevel = true;
+                    } else if (para.Equals("*/")) {
+                        isCommentFirstLevel = false;
+                    }
+                } else {//если мы попадаем сюда то это значит был обрыв блока, и стиль заканчивается в следующем блоке
                     return null;
                 }
             }
@@ -179,12 +202,22 @@ namespace ProgramLib.Packaging.Css {
             return cssRule;
         }
 
+        /// <summary>
+        /// Створення тексту Css
+        /// </summary>
+        /// <param name="nodes">набір складових файлу Css</param>
+        /// <returns>текст Css</returns>
         private string CreateCssText(List<BaseCssNode> nodes) {
             string result = "";
             foreach (BaseCssNode node in nodes) result += node.ToString();
             return result;
         }
         
+        /// <summary>
+        /// Видалення коментарів
+        /// </summary>
+        /// <param name="text">текст для аналізу</param>
+        /// <returns>текст без коментарів</returns>
         private string DeleteComments(ref string text) {
             do {
                 int indexOpenComments = text.IndexOf("/*");

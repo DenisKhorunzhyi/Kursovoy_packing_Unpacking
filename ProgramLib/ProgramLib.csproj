@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SoftCircuits.JavaScriptFormatter, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SoftCircuits.JavaScriptFormatter.2.0.0\lib\netstandard2.0\SoftCircuits.JavaScriptFormatter.dll</HintPath>
+    <Reference Include="DouglasCrockford.JsMin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=99147aa1108448b7, processorArchitecture=MSIL">
+      <HintPath>..\packages\DouglasCrockford.JsMin.2.1.0\lib\net45\DouglasCrockford.JsMin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,17 +54,20 @@
     <Compile Include="Packaging\Css\Css.cs" />
     <Compile Include="Packaging\Css\CssRule.cs" />
     <Compile Include="Packaging\Css\MainLine.cs" />
-    <Compile Include="Packaging\Html\BaseHtmlNode.cs" />
     <Compile Include="Packaging\Html\Html.cs" />
-    <Compile Include="Packaging\Html\Node.cs" />
-    <Compile Include="Packaging\Html\Tree.cs" />
-    <Compile Include="Packaging\IPackaging.cs" />
+    <Compile Include="Packaging\IPackagingText.cs" />
     <Compile Include="Packaging\Js.cs" />
     <Compile Include="Packaging\PackagingMaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jsbeautifier-master\Jsbeautifier\Jsbeautifier.csproj">
+      <Project>{b4355d4d-03d1-4e00-8029-7bf570ea9a8d}</Project>
+      <Name>Jsbeautifier</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
