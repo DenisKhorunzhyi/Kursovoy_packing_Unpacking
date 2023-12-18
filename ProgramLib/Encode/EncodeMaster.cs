@@ -66,7 +66,7 @@ namespace PackagingAndCodingUtil.Encode {
         }
 
         /// <summary>
-        /// Виконання кодування файлу
+        /// Виконання кодування
         /// </summary>
         /// <param name="srcEncoding">початкова таблиця кодування</param>
         /// <param name="dstEncoding">результуюча таблиця кодування</param>
@@ -81,7 +81,7 @@ namespace PackagingAndCodingUtil.Encode {
             }
         }
         /// <summary>
-        /// Виконання кодування тексту
+        /// Виконання кодування
         /// </summary>
         /// <param name="srcEncoding">початкова таблиця кодування</param>
         /// <param name="dstEncoding">результуюча таблиця кодування</param>
@@ -134,7 +134,7 @@ namespace PackagingAndCodingUtil.Encode {
         }
 
         /// <summary>
-        /// Заміна пробілів на табуляцію чи навпаки в файлі
+        /// Заміна пробілів на табуляцію чи навпаки
         /// </summary>
         /// <param name="pathToFiles">посилання на файл</param>
         /// <param name="resultSymbol">на який символ необхідно замінити</param>
@@ -151,7 +151,7 @@ namespace PackagingAndCodingUtil.Encode {
             ReplaceAll(pathToFiles, oldChar, newChar);
         }
         /// <summary>
-        /// Заміна символу табуляції на пробіли чи навпаки в тесті 
+        /// Заміна символу табуляції на пробіли чи навпаки
         /// </summary>
         /// <param name="text">початковий текст</param>
         /// <param name="spaceOrTab">на який символ необхідно замінити</param>

@@ -1,7 +1,7 @@
 ﻿using DouglasCrockford.JsMin;
 using System.IO;
 using System.Text;
-
+//SoftCircuits.JavaScriptFormatter также нормально подходит для распаковки файлов но в ней присутствует такой же баг как был у Jsbeautifier.Beautifier
 
 namespace ProgramLib.Packaging {
     public class Js : BaseTypeFile, IPackagingText {
@@ -12,6 +12,7 @@ namespace ProgramLib.Packaging {
         /// <param name="pathDestination">посилання на файл результату</param>
         public override void Packaging(string pathSource, string pathDestination) {
             string js = File.ReadAllText(pathSource);
+            //File.WriteAllText(pathDestination, SplitTextJs(new JsMinifier().Minify(js)));
             File.WriteAllText(pathDestination, new JsMinifier().Minify(js));
         }
         /// <summary>
@@ -20,6 +21,7 @@ namespace ProgramLib.Packaging {
         /// <param name="data"></param>
         /// <returns>результат упакування</returns>
         public string PackagingText(string data) {
+            //return SplitTextJs(new JsMinifier().Minify(data));
             return new JsMinifier().Minify(data);
         }
 
@@ -34,6 +36,9 @@ namespace ProgramLib.Packaging {
             string result = b.Beautify(js);
             File.WriteAllText(pathDestination, result);
 
+            //======================= - bad work
+            //JavaScriptFormatter f = new JavaScriptFormatter(new FormatOptions());
+            //File.WriteAllText(pathDestination, f.Format(js));
         }
         /// <summary>
         /// Виконання розпакування тексту
@@ -55,6 +60,16 @@ namespace ProgramLib.Packaging {
                 if (!string.IsNullOrEmpty(array[i].Trim()))
                     result += afterText + array[i] + "\n";
             }
+
+            //======================= - bad work
+            //string unpackaged = new JavaScriptFormatter(new FormatOptions()).Format(data);
+            //var array = unpackaged.Split('\n');
+            //string afterText = new StringBuilder().Append('\t', deepLevel).ToString();
+            //for (int i = 0; i < array.Length; i++)
+            //{
+            //    if (!string.IsNullOrEmpty(array[i].Trim()))
+            //        result += afterText + array[i] + "\n";
+            //}
             return result;
         }
     }

@@ -37,6 +37,10 @@
     <Reference Include="DouglasCrockford.JsMin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=99147aa1108448b7, processorArchitecture=MSIL">
       <HintPath>..\packages\DouglasCrockford.JsMin.2.1.0\lib\net45\DouglasCrockford.JsMin.dll</HintPath>
     </Reference>
+    <Reference Include="Jsbeautifier, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Jsbeautifier.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,13 +65,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Jsbeautifier-master\Jsbeautifier\Jsbeautifier.csproj">
-      <Project>{b4355d4d-03d1-4e00-8029-7bf570ea9a8d}</Project>
-      <Name>Jsbeautifier</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

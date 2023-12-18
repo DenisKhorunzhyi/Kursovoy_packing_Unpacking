@@ -165,7 +165,7 @@ namespace ProgramLib.Packaging.Html {
 
 
         /// <summary>
-        /// Виконання упакування/розпакування Css або Js Если в файле HTML есть блок  Css або Js
+        /// Виконання упакування/розпакування Css або Js
         /// </summary>
         /// <param name="text">текст</param>
         /// <param name="indexOpenTag">індекс початку тегу</param>
